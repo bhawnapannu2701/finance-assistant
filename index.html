@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Finance Assistant</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins&family=Roboto&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <!-- Starry BG -->
+  <div id="stars"></div><div id="twinkling"></div>
+
+  <!-- PAGE: AUTH -->
+  <div id="login-signup-page" class="page dark-bg">
+    <h1 class="dark-title">
+      <i class="fas fa-moon-stars icon"></i> Welcome to Finance Night
+    </h1>
+    <div class="auth-box">
+      <section class="anim-fade">
+        <h2><i class="fas fa-user-plus icon"></i> Sign Up</h2>
+        <input id="signup-email"    type="email"    placeholder="Email"/>
+        <input id="signup-password" type="password" placeholder="Password"/>
+        <button id="signup-btn" class="sparkle-btn"><i class="fas fa-arrow-right icon"></i> Sign Up</button>
+        <p class="small-text"><a href="#" id="verify-email">Resend Verification</a></p>
+      </section>
+      <section class="anim-rotate">
+        <h2><i class="fas fa-sign-in-alt icon"></i> Login</h2>
+        <input id="login-email"    type="email"    placeholder="Email"/>
+        <input id="login-password" type="password" placeholder="Password"/>
+        <button id="login-btn" class="sparkle-btn"><i class="fas fa-arrow-right icon"></i> Login</button>
+        <p class="small-text"><a href="#" id="reset-password">Forgot Password?</a></p>
+      </section>
+    </div>
+  </div>
+
+  <!-- PAGE: DASHBOARD -->
+  <div id="dashboard-page" class="page dark-bg" style="display:none;">
+    <nav class="nav-bar">
+      <button data-page="budget">💰 Budget</button>
+      <button data-page="history">📈 History</button>
+      <button data-page="categories">🏷️ Categories</button>
+      <button data-page="recurring">🔄 Recurring</button>
+      <button data-page="profile">👤 Profile</button>
+      <button id="logout-btn">🚪 Logout</button>
+    </nav>
+
+    <!-- Budget & Expenses -->
+    <div id="budget" class="subpage">
+      <h1 class="dark-title"><i class="fas fa-wallet icon"></i> My Monthly Budget</h1>
+      <section class="budget-section anim-pulse-once">
+        <h2><i class="fas fa-coins icon"></i> Set Monthly Budget</h2>
+        <input id="budgetInput" type="number" placeholder="Enter your budget"/>
+        <button id="set-budget-btn" class="sparkle-btn"><i class="fas fa-check icon"></i> Set Budget</button>
+        <p class="value-text label-bg"><i class="fas fa-hourglass-half icon"></i> Remaining: <span id="remainingBudget">₹0.00</span></p>
+      </section>
+      <section class="expense-section anim-squeeze-once">
+        <h2><i class="fas fa-cart-plus icon"></i> Add Expense</h2>
+        <input id="expenseInput" type="text" placeholder="Description"/>
+        <input id="amountInput"  type="number" placeholder="Amount"/>
+        <select id="categoryInput">
+          <option value="Food">🍔 Food</option><option value="Transport">🚌 Transport</option>
+          <option value="Entertainment">🎬 Entertainment</option><option value="Bills">💡 Bills</option><option value="Others">✨ Others</option>
+        </select>
+        <button id="add-expense-btn" class="sparkle-btn"><i class="fas fa-plus icon"></i> Add Expense</button>
+      </section>
+      <section class="list-section anim-slide-once">
+        <h2><i class="fas fa-list-ul icon"></i> Expenses</h2>
+        <ul id="expenseList"></ul>
+        <p class="value-text label-bg"><i class="fas fa-calculator icon"></i> Total: ₹<span id="totalAmount">0.00</span></p>
+        <button id="export-btn" class="sparkle-btn"><i class="fas fa-file-csv icon"></i> Export CSV</button>
+      </section>
+    </div>
+
+    <!-- Multi-Month History -->
+    <div id="history" class="subpage" style="display:none;">
+      <h1 class="dark-title"><i class="fas fa-chart-line icon"></i> Monthly History</h1>
+      <canvas id="historyChart"></canvas>
+    </div>
+
+    <!-- Per-Category Budgets -->
+    <div id="categories" class="subpage" style="display:none;">
+      <h1 class="dark-title"><i class="fas fa-tags icon"></i> Category Budgets</h1>
+      <div id="categoryBudgetList" class="budget-list"></div>
+      <button id="addCategoryBudget" class="sparkle-btn"><i class="fas fa-plus icon"></i> Add Category Budget</button>
+    </div>
+
+    <!-- Recurring Expenses -->
+    <div id="recurring" class="subpage" style="display:none;">
+      <h1 class="dark-title"><i class="fas fa-sync icon"></i> Recurring Expenses</h1>
+      <ul id="recurringList"></ul>
+      <button id="addRecurring" class="sparkle-btn"><i class="fas fa-plus icon"></i> Add Recurring</button>
+    </div>
+
+    <!-- Profile & Settings -->
+    <div id="profile" class="subpage" style="display:none;">
+      <h1 class="dark-title"><i class="fas fa-user-cog icon"></i> Profile</h1>
+      <input id="displayName" placeholder="Display Name"/>
+      <input id="avatarUrl"   placeholder="Avatar URL"/>
+      <select id="themeSelect"><option value="dark">Dark</option><option value="light">Light</option></select>
+      <button id="saveProfile" class="sparkle-btn"><i class="fas fa-save icon"></i> Save Profile</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container"></div>
+
+  <!-- Chart.js + Firebase -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
